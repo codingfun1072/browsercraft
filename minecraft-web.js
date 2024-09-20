@@ -11,7 +11,7 @@ async function downloadFileToCheerpJ(url, destPath, progressCallback) {
 	const contentLength = +response.headers.get('Content-Length');
 	
 	progressCallback?.(Math.round(contentLength * 0.6), contentLength);
-	const bytes = await response.bytes();
+	const bytes = new Uint8Array(await response.arrayBuffer());
 	progressCallback?.(Math.round(0.9 * contentLength), contentLength);
 	
 	cheerpOSAddStringFile(destPath, bytes);
