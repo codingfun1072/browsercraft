@@ -7,31 +7,15 @@
  */
 async function downloadFileToCheerpJ(url, destPath, progressCallback) {
 	const response = await fetch(url);
-	const reader = response.body.getReader();
 	const contentLength = +response.headers.get('Content-Length');
+        
+	progressCallback?.(0, contentLength);
+	const bytes = await response.bytes();	
+        progressCallback?.(contentLength, contentLength);
 
-	const bytes = new Uint8Array(contentLength);
-  progressCallback?.(0, contentLength);
-
-	let pos = 0;
-	while (true) {
-		const { done, value } = await reader.read();
-		if (done)
-			break;
-		bytes.set(value, pos);
-		pos += value.length;
-    progressCallback?.(pos, contentLength);
-	}
-
-	// Write to CheerpJ filesystem
-	return new Promise((resolve, reject) => {
-		cheerpOSOpen(cjFDs, destPath, "w", fd => {
-			cheerpOSWrite(cjFDs, fd, bytes, 0, bytes.length, w => {
-				cheerpOSClose(cjFDs, fd);
-				resolve();
-			});
-		});
-	});
+	cheerpOSAddStringFile(destPath, bytes);
+	
+	return Promise.resolve(void (0))
 }
 
 const template = document.createElement('template');
