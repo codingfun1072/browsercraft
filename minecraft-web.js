@@ -6,14 +6,16 @@
  * @returns {Promise<void>}
  */
 async function downloadFileToCheerpJ(url, destPath, progressCallback) {
+	progressCallback?.(0, contentLength);
 	const response = await fetch(url);
 	const contentLength = +response.headers.get('Content-Length');
-        
-	progressCallback?.(0, contentLength);
-	const bytes = await response.bytes();	
-        progressCallback?.(contentLength, contentLength);
-
+	
+	progressCallback?.(Math.round(contentLength * 0.6), contentLength);
+	const bytes = await response.bytes();
+	progressCallback?.(Math.round(0.9 * contentLength), contentLength);
+	
 	cheerpOSAddStringFile(destPath, bytes);
+	progressCallback?.(contentLength, contentLength);
 	
 	return Promise.resolve(void (0))
 }
