@@ -8,18 +8,17 @@
 async function downloadFileToCheerpJ(url, destPath, progressCallback) {
 	progressCallback?.(10, 100);
 	const response = await fetch(url);
-	const contentLength = +response.headers.get('Content-Length');
 	
-	progressCallback?.(Math.round(contentLength * 0.6), contentLength);
+	progressCallback?.(70, 100);
 	const bytes = new Uint8Array(await response.arrayBuffer());
-	progressCallback?.(Math.round(0.9 * contentLength), contentLength);
+	progressCallback?.(90, 100);
 	
 	// Write to CheerpJ filesystem
 	return new Promise((resolve, reject) => {
 		cheerpOSOpen(cjFDs, destPath, "w", fd => {
 			cheerpOSWrite(cjFDs, fd, bytes, 0, bytes.length, w => {
 				cheerpOSClose(cjFDs, fd);
-				progressCallback?.(contentLength, contentLength);
+				progressCallback?.(100, 100);
 				resolve();
 			});
 		});
