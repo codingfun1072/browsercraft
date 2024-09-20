@@ -9,7 +9,7 @@ async function downloadFileToCheerpJ(url, destPath, progressCallback) {
 	progressCallback?.(10, 100);
 	const response = await fetch(url);
 	
-	progressCallback?.(70, 100);
+	progressCallback?.(60, 100);
 	const bytes = new Uint8Array(await response.arrayBuffer());
 	progressCallback?.(90, 100);
 	
