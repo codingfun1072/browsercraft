@@ -14,10 +14,16 @@ async function downloadFileToCheerpJ(url, destPath, progressCallback) {
 	const bytes = new Uint8Array(await response.arrayBuffer());
 	progressCallback?.(Math.round(0.9 * contentLength), contentLength);
 	
-	cheerpOSAddStringFile(destPath, bytes);
-	progressCallback?.(contentLength, contentLength);
-	
-	return Promise.resolve(void (0))
+	// Write to CheerpJ filesystem
+	return new Promise((resolve, reject) => {
+		cheerpOSOpen(cjFDs, destPath, "w", fd => {
+			cheerpOSWrite(cjFDs, fd, bytes, 0, bytes.length, w => {
+				cheerpOSClose(cjFDs, fd);
+				progressCallback?.(contentLength, contentLength);
+				resolve();
+			});
+		});
+	});
 }
 
 const template = document.createElement('template');
