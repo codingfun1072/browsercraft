@@ -6,7 +6,7 @@
  * @returns {Promise<void>}
  */
 async function downloadFileToCheerpJ(url, destPath, progressCallback) {
-	progressCallback?.(0, contentLength);
+	progressCallback?.(0, 100);
 	const response = await fetch(url);
 	const contentLength = +response.headers.get('Content-Length');
 	
