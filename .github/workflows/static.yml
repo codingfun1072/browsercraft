@@ -35,6 +35,19 @@ jobs:
           submodules: recursive
       - name: Setup Pages
         uses: actions/configure-pages@v5
+        
+      # Deploy to branch
+      - name: Deploy to branch
+        uses: s0/git-publish-subdir-action@v2.6.0
+        env:
+          REPO: self
+          BRANCH: gh_pages
+          FOLDER: '.'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SQUASH_HISTORY: true
+          COMMIT_NAME: 'github-actions[bot]'
+          COMMIT_EMAIL: '41898282+github-actions[bot]@users.noreply.github.com'
+          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
